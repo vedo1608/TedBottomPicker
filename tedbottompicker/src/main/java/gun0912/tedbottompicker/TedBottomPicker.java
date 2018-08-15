@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -415,30 +414,32 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
               @Override
               public void onActivityResult(int resultCode, Intent data) {
                 if (resultCode == Activity.RESULT_OK) {
-                  onActivityResultCamera(cameraImageUri);
+                  onActivityResultCamera(photoURI);
                 }
               }
             })
             .startActivityForResult();
       } catch (Exception e) {
+        e.printStackTrace();
         Log.e("LOGLOG", "create image file failed");
       }
     } else {
       cameraIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
       mediaFile = getVideoFile();
 
-      Uri photoURI = FileProvider.getUriForFile(getContext(),
-          getContext().getApplicationContext().getPackageName() + ".provider", mediaFile);
+      //final Uri photoURI = FileProvider.getUriForFile(getContext(),
+      //    getContext().getApplicationContext().getPackageName() + ".provider", mediaFile);
 
       List<ResolveInfo> resolvedIntentActivities = getContext().getPackageManager()
           .queryIntentActivities(cameraIntent, PackageManager.MATCH_DEFAULT_ONLY);
       for (ResolveInfo resolvedIntentInfo : resolvedIntentActivities) {
         String packageName = resolvedIntentInfo.activityInfo.packageName;
-        getContext().grantUriPermission(packageName, photoURI,
+        getContext().grantUriPermission(packageName, cameraImageUri,
             Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
       }
 
-      cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+      cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
 
       TedOnActivityResult.with(getActivity())
           .setIntent(cameraIntent)
@@ -452,7 +453,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
           })
           .startActivityForResult();
     }
-
   }
 
   private File getImageFile() {
@@ -492,20 +492,19 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
       String timeStamp =
           new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date());
       String imageFileName = "VIDEO_" + timeStamp + "_";
-      File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+      File storageDir = Environment.getExternalStoragePublicDirectory(
+          Environment.DIRECTORY_MOVIES);
 
       if (!storageDir.exists()) {
         storageDir.mkdirs();
       }
 
-      videoFile = File.createTempFile(
-          imageFileName,  /* prefix */
-          ".mp4",         /* suffix */
-          storageDir      /* directory */
-      );
+      videoFile = FileUtils.createVideoFile(getContext());
 
       // Save a file: path for use with ACTION_VIEW intents
       cameraImageUri = Uri.fromFile(videoFile);
+
+      return videoFile;
     } catch (IOException e) {
       e.printStackTrace();
       errorMessage("Could not create imageFile for camera");
@@ -603,7 +602,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
   private void onActivityResultCamera(final Uri cameraImageUri) {
     updateAdapter();
-    complete(photoURI);
+    complete(cameraImageUri);
   }
 
   private void onActivityResultGallery(Intent data) {
