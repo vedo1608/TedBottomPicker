@@ -13,23 +13,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DimenRes;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,8 +23,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DimenRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.gun0912.tedonactivityresult.TedOnActivityResult;
 import com.gun0912.tedonactivityresult.listener.OnActivityResultListener;
 import gun0912.tedbottompicker.adapter.GalleryAdapter;
@@ -141,7 +141,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
     super.onViewCreated(contentView, savedInstanceState);
   }
 
-  @Override
   public void setupDialog(Dialog dialog, int style) {
     super.setupDialog(dialog, style);
     contentView = View.inflate(getContext(), R.layout.tedbottompicker_content_view, null);
@@ -615,7 +614,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
       errorMessage();
     }
 
-    final ContentResolver resolver = Objects.requireNonNull(getContext()).getContentResolver();
+    final ContentResolver resolver = requireContext().getContentResolver();
     resolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
     complete(new MediaPickerEntity(uri).setType(MediaPickerEntity.MEDIA_TYPE.GALLERY));
@@ -628,7 +627,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
       errorMessage();
     }
 
-    final ContentResolver resolver = Objects.requireNonNull(getContext()).getContentResolver();
+    final ContentResolver resolver = requireContext().getContentResolver();
     resolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
     complete(new MediaPickerEntity(uri).setType(MediaPickerEntity.MEDIA_TYPE.PDF));

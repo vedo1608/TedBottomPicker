@@ -4,7 +4,6 @@ import android.Manifest;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -14,14 +13,16 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
+import com.gun0912.tedpermission.normal.TedPermission;
 import gun0912.tedbottompicker.TedBottomPicker;
 import gun0912.tedbottompicker.entity.MediaPickerEntity;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -80,14 +81,13 @@ public class MainActivity extends AppCompatActivity {
             bottomSheetDialogFragment.show(getSupportFragmentManager());
           }
 
-          @Override
-          public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+          @Override public void onPermissionDenied(List<String> deniedPermissions) {
             Toast.makeText(MainActivity.this, "Permission Denied\n" + deniedPermissions.toString(),
                 Toast.LENGTH_SHORT).show();
           }
         };
 
-        TedPermission.with(MainActivity.this)
+        TedPermission.create()
             .setPermissionListener(permissionlistener)
             .setDeniedMessage(
                 "If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
@@ -136,14 +136,14 @@ public class MainActivity extends AppCompatActivity {
             bottomSheetDialogFragment.show(getSupportFragmentManager());
           }
 
-          @Override
-          public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+          @Override public void onPermissionDenied(List<String> deniedPermissions) {
             Toast.makeText(MainActivity.this, "Permission Denied\n" + deniedPermissions.toString(),
                 Toast.LENGTH_SHORT).show();
           }
+
         };
 
-        TedPermission.with(MainActivity.this)
+        TedPermission.create()
             .setPermissionListener(permissionlistener)
             .setDeniedMessage(
                 "If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
