@@ -1,18 +1,19 @@
 package gun0912.tedbottompicker.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import gun0912.tedbottompicker.R;
@@ -114,7 +115,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
           } else {
             dataIndex = MediaStore.Video.VideoColumns.DATA;
           }
-          String imageLocation = cursor.getString(cursor.getColumnIndex(dataIndex));
+          @SuppressLint("Range") String imageLocation = cursor.getString(cursor.getColumnIndex(dataIndex));
           File imageFile = new File(imageLocation);
           pickerTiles.add(new PickerTile(Uri.fromFile(imageFile)));
           count++;
@@ -166,7 +167,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
   }
 
   @Override
-  public void onBindViewHolder(final GalleryViewHolder holder, final int position) {
+  public void onBindViewHolder(final GalleryViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
     PickerTile pickerTile = getItem(position);
 
